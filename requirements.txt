@@ -8,3 +8,5 @@ streamlit
 plotly
 ta
 statsmodels
+tensorflow
+keras

@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import yfinance as yf
+from yfinance import Search
 import plotly.graph_objects as go
 from datetime import date, timedelta
 from ta.momentum import RSIIndicator
@@ -110,8 +111,13 @@ def arima_model_trainer(series , steps=30):
 
 
 def search_multiple(company_name):
-    results = yf.search(company_name)
-    return [item["symbol"] for item in results.get("quotes", [])[:5]]
+    try:
+        search = Search(company_name)
+        results = search.quotes
+
+        return [item["symbol"] for item in results[:5]]
+    except:
+        return []
 
 def plot_next_30_days(data):
     data = data['Close'].dropna()
@@ -167,10 +173,13 @@ today = date.today()
 with col1:
     company = st.text_input("Company Name", "Google")
 
-    options = search_multiple(company)
-  
+options = search_multiple(company)
+
 if options:
     ticker = st.selectbox("Select Ticker", options)
+else:
+    st.warning("No results found")
+    st.stop()
 
 with col2:
     start_date = st.date_input("Start Date", today.replace(year=today.year - 1))

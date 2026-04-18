@@ -106,8 +106,12 @@ def arima_model_trainer(series , steps=30):
     model = ARIMA(history, order=(2, 1, 0))
     model_fit = model.fit()
     forecast = model_fit.forecast(steps=steps)
-    
     return forecast
+
+
+def search_multiple(company_name):
+    results = yf.search(company_name)
+    return [item["symbol"] for item in results.get("quotes", [])[:5]]
 
 def plot_next_30_days(data):
     data = data['Close'].dropna()
@@ -161,7 +165,12 @@ col1, col2, col3 = st.columns(3)
 today = date.today()
 
 with col1:
-    ticker = st.text_input("Ticker", "GOOGL")
+    company = st.text_input("Company Name", "Google")
+
+    options = search_multiple(company)
+  
+if options:
+    ticker = st.selectbox("Select Ticker", options)
 
 with col2:
     start_date = st.date_input("Start Date", today.replace(year=today.year - 1))

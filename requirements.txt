@@ -8,5 +8,5 @@ streamlit
 plotly
 ta
 statsmodels
-tensorflow-cpu
+tensorflow-cpu==2.17.1
 keras
